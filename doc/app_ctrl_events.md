@@ -19,11 +19,51 @@ __Authors:__ Ulf Wiger ([`ulf@wiger.net`](mailto:ulf@wiger.net)).
 
 
 
+### <a name="type-app_info">app_info()</a> ###
+
+
+<pre><code>
+app_info() = {<a href="#type-app_name">app_name()</a>, node()}
+</code></pre>
+
+
+
+
+### <a name="type-app_name">app_name()</a> ###
+
+
+<pre><code>
+app_name() = atom()
+</code></pre>
+
+
+
+
 ### <a name="type-event_tag">event_tag()</a> ###
 
 
 <pre><code>
 event_tag() = app_running | app_stopped | new_mode
+</code></pre>
+
+
+
+
+### <a name="type-info">info()</a> ###
+
+
+<pre><code>
+info() = <a href="#type-app_info">app_info()</a> | <a href="#type-mode_info">mode_info()</a>
+</code></pre>
+
+
+
+
+### <a name="type-mode_info">mode_info()</a> ###
+
+
+<pre><code>
+mode_info() = atom()
 </code></pre>
 
 <a name="index"></a>
