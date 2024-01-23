@@ -48,7 +48,6 @@ default_mode() ->
             Val
     end.
 
-%% Format: [{App, 
 applications() -> get_env_dict(applications, dict).
 
 protected_mode_apps() -> get_env_set(protected_mode_apps).
