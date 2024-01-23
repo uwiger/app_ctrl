@@ -6,7 +6,7 @@
 
 -module(app_ctrl_bootstrap).
 
--export([ 
+-export([
           adding_handler/1
         , changing_config/3
         , filter_config/1

@@ -80,7 +80,7 @@ and returns the active mode, or timeout, including which apps are still
 pending.</td></tr><tr><td valign="top"><a href="#check_for_new_applications-0">check_for_new_applications/0</a></td><td>Checks if applications have been added (or removed) and takes
 appropriate action.</td></tr><tr><td valign="top"><a href="#dependencies_of-1">dependencies_of/1</a></td><td>List all applications that depend on <code>App</code>
 (including <code>start_before</code> dependencies.</td></tr><tr><td valign="top"><a href="#get_mode-0">get_mode/0</a></td><td>Get the current mode.</td></tr><tr><td valign="top"><a href="#is_mode_stable-0">is_mode_stable/0</a></td><td>Checks whether the system is in a stable mode (<code>true</code>), or
-in transition between modes (<code>false</code>).</td></tr><tr><td valign="top"><a href="#set_and_await_mode-2">set_and_await_mode/2</a></td><td>Like <a href="#set_mode-1"><code>set_mode/1</code></a>, but waits until the transition to the
+in transition between modes (<code>false</code>).</td></tr><tr><td valign="top"><a href="#set_and_await_mode-2">set_and_await_mode/2</a></td><td>Like <a docgen-rel="seemfa" docgen-href="#set_mode/1" href="#set_mode-1"><code>set_mode/1</code></a>, but waits until the transition to the
 new mode has been completed.</td></tr><tr><td valign="top"><a href="#set_mode-1">set_mode/1</a></td><td>Sets the current mode to <code>Mode</code>.</td></tr><tr><td valign="top"><a href="#status-0">status/0</a></td><td>Returns information about the current state of the system.</td></tr></table>
 
 

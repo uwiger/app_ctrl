@@ -12,7 +12,15 @@
 
 -type event_tag() :: app_running | app_stopped | new_mode.
 
--export_type([event_tag/0]).
+-type info() :: app_info()
+	      | mode_info().
+
+-type app_info()  :: {app_name(), node()}.
+-type mode_info() :: atom().
+-type app_name()  :: atom().
+
+-export_type([ event_tag/0
+             , info/0]).
 
 -define(PS_TAG, app_ctrl).
 
@@ -33,5 +41,7 @@ unsubscribe(EventTag) ->
     gproc_ps:unsubscribe(l, {?PS_TAG, EventTag}).
 
 %% @hidden
+-spec publish(EventTag, info()) -> ok
+             when EventTag :: event_tag().
 publish(EventTag, Info) ->
     gproc_ps:publish(l, {?PS_TAG, EventTag}, Info).

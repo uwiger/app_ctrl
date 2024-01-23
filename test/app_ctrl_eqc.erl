@@ -66,8 +66,8 @@ inverse(R) ->
 
 image(Set,R) ->
     [Y || X <- Set,
-	  {X1,Y} <- R,
-	  X == X1].
+          {X1,Y} <- R,
+          X == X1].
 
 %% We may convert relations to and from "functions" that associate
 %% elements in the domain with lists of elements in the range.
@@ -76,9 +76,9 @@ group([]) ->
     [];
 group([{X,Y}|R]) ->
     [{X,[Y|[Y1 || {X1,Y1} <- R,
-		  X==X1]]}
+                  X==X1]]}
      |group([{X1,Y1} || {X1,Y1} <- R,
-			X/=X1])].
+                        X/=X1])].
 
 ungroup([]) ->
     [];
@@ -89,18 +89,18 @@ ungroup([{X,Ys}|F]) ->
 
 mapping(DomG,RanG) ->
     ?LET(Dom,ulist(DomG),
-	 [{X,RanG} || X <- Dom]).
+         [{X,RanG} || X <- Dom]).
 
 %% Now we can state inverse relationships between \verb!group! and
 %% \verb!ungroup!.
 
 prop_group_ungroup() ->
     ?FORALL(F,mapping(int(),nonempty(ulist(int()))),
-	    group(ungroup(F)) == F).
+            group(ungroup(F)) == F).
 
 prop_ungroup_group() ->
     ?FORALL(R,list({int(),int()}),
-	    bag_eq(ungroup(group(R)),R)).
+            bag_eq(ungroup(group(R)),R)).
 
 %% We sometimes need to specify that the elements of a list are {\em different}:
 
@@ -115,11 +115,11 @@ remove_duplicates(L) ->
 
 prop_different_remove_duplicates() ->
     ?FORALL(L,list(int()),
-	    different(remove_duplicates(L))).
+            different(remove_duplicates(L))).
 
 prop_remove_duplicates_different() ->
     ?FORALL(L,list(int()),
-	    ?IMPLIES(different(L),remove_duplicates(L)==L)).
+            ?IMPLIES(different(L),remove_duplicates(L)==L)).
 
 %% We generate lists of different elements using remove\_duplicates:
 
@@ -149,7 +149,7 @@ application() ->
 %% of processors are actually more stable than the particular set of
 %% applications that implement that r\^ole. Therefore, we make the
 %% notion of a r\^ole explicit, and assign r\^oles to processors,
-%% rather than applications. 
+%% rather than applications.
 
 %% R\^oles are named by atoms, for example:
 
@@ -171,7 +171,7 @@ valid_roles(Roles) ->
 
 roles() ->
     ?LET(AppRoles,mapping(application(),role_name()),
-	 group(inverse(AppRoles))).
+         group(inverse(AppRoles))).
 
 prop_valid_roles() ->
     ?FORALL(Roles,roles(),valid_roles(Roles)).
@@ -188,7 +188,7 @@ valid_slots(Slots) ->
 %% \item \verb!SlotMembers! is a mapping from slots to processors
 valid_slot_members(Slots,SlotMembers) ->
     contains(Slots,dom(SlotMembers)) andalso different(ran(SlotMembers)).
-%% filling those slots (a list of slot-processor pairs) 
+%% filling those slots (a list of slot-processor pairs)
 %% \item \verb!Layout! is a layout specification as per Ulf's slides.
 %% \end{itemize}
 
@@ -196,22 +196,22 @@ valid_slot_members(Slots,SlotMembers) ->
 %% and members, defined as follows:
 
 layout_meaning(Slots,SlotMembers,Layout) ->
-    [{Role,Proc} 
+    [{Role,Proc}
      || Elem <- Layout,
-	{Role,Proc} <- layout_element_meaning(Slots,SlotMembers,Elem)].
+        {Role,Proc} <- layout_element_meaning(Slots,SlotMembers,Elem)].
 
 %% That is, the meaning of a layout is a combination of the meanings
 %% of its elements. \verb!on_each! just assigns the r\^ole to each
 %% active slot:
 layout_element_meaning(_Slots,SlotMembers,{on_each,Roles}) ->
     [{Role,Proc} || Role <- Roles,
-		    Proc <- ran(SlotMembers)];
+                    Proc <- ran(SlotMembers)];
 %% R\^oles can be explicitly assigned to slots---provided the slot is
 %% filled.
-layout_element_meaning(_Slots,SlotMembers,{Slot,Roles}) 
+layout_element_meaning(_Slots,SlotMembers,{Slot,Roles})
   when is_atom(Slot)->
     [{Role,Proc} || Proc <- image([Slot],SlotMembers),
-		    Role <- Roles];
+                    Role <- Roles];
 %% The \verb!if_active! property is interesting: note that the value
 %% of this property, according to Ulf's slides, is just a special case
 %% of a layout! We can therefore generalise the property to allow an
@@ -219,10 +219,10 @@ layout_element_meaning(_Slots,SlotMembers,{Slot,Roles})
 %% meaning.
 layout_element_meaning(Slots,SlotMembers,{{if_active,N},Layout}) ->
     case length(SlotMembers) of
-	N ->
-	    layout_meaning(Slots,SlotMembers,Layout);
-	_ ->
-	    []
+        N ->
+            layout_meaning(Slots,SlotMembers,Layout);
+        _ ->
+            []
     end.
 
 %% When is a layout {\em valid}? It seems to me we should require that
@@ -258,9 +258,9 @@ valid_layout_meaning(Slots,SlotMembers,Layout) ->
 %% never change.
 
 -record(processor,
-	{name,    % an atom, used to identify processor in the API
-	 node,    % the Erlang node running the processor--fixed?
-	 type}).  % e.g. master, worker, undefined--what's this for?
+        {name,    % an atom, used to identify processor in the API
+         node,    % the Erlang node running the processor--fixed?
+         type}).  % e.g. master, worker, undefined--what's this for?
 
 processor_name() ->
     elements([p1,p2,p3,p4,p5,p6,p7,p8,p9,p10]).
@@ -270,42 +270,38 @@ processor_type() ->
 
 processor() ->
     ?LET(Name,processor_name(),
-	 #processor{name = Name,
-		    node = list_to_atom(atom_to_list(Name)++"@debian"),
-		    type = processor_type()}).
+         #processor{name = Name,
+                    node = list_to_atom(atom_to_list(Name)++"@debian"),
+                    type = processor_type()}).
 
 %% A processor may be up or down. Of course, this varies with time.
 
 -record(processors,
-	{up,      % a list of the processors which are up
-	 down}).  % a list of the processors which are down
+        {up,      % a list of the processors which are up
+         down}).  % a list of the processors which are down
 
 valid_processors(#processors{up=Up,down=Down}) ->
     different([P#processor.name || P <- Up++Down]).
 
 processors() ->
     ?LET({PreUp,PreDown},{list(processor()),list(processor())},
-	 #processors{up = filter_duplicate_names([],PreUp),
-		     down = filter_duplicate_names(
-			      [P#processor.name || P <- PreUp],
-			      PreDown)}).
+         #processors{up = filter_duplicate_names([],PreUp),
+                     down = filter_duplicate_names(
+                              [P#processor.name || P <- PreUp],
+                              PreDown)}).
 
 filter_duplicate_names(_Names,[]) ->
     [];
 filter_duplicate_names(Names,[P|Ps]) ->
     case lists:member(P#processor.name,Names) of
-	true ->
-	    filter_duplicate_names(Names,Ps);
-	false ->
-	    [P|filter_duplicate_names([P#processor.name|Names],Ps)]
+        true ->
+            filter_duplicate_names(Names,Ps);
+        false ->
+            [P|filter_duplicate_names([P#processor.name|Names],Ps)]
     end.
 
 prop_valid_processors() ->
     ?FORALL(Procs,processors(),valid_processors(Procs)).
-		   
-
-
-
 
 
 %% The purpose of clware is to decide what runs where--i.e. produce an
@@ -325,34 +321,34 @@ prop_valid_processors() ->
 %% \begin{verbatim}
 %% valid_assignment(Processors,Roles,Assignment) ->
 %%     lists:all(fun({PName,Rs}) ->
-%% 		      (lists:keymember(PName,
-%% 				       #processor.name,
-%% 				       Processors#processors.up)
-%% 		       orelse Rs==[])
-%% 			  andalso lists:all(fun(R) -> 
-%% 						    lists:keymember(R,
-%% 								    #role.name,
-%% 								    Roles)
-%% 					    end,
-%% 					    Rs)
-%% 			  andalso different(Rs)
-%% 	      end,
-%% 	      Assignment).
+%%                    (lists:keymember(PName,
+%%                                     #processor.name,
+%%                                     Processors#processors.up)
+%%                     orelse Rs==[])
+%%                        andalso lists:all(fun(R) ->
+%%                                                  lists:keymember(R,
+%%                                                                  #role.name,
+%%                                                                  Roles)
+%%                                          end,
+%%                                          Rs)
+%%                        andalso different(Rs)
+%%            end,
+%%            Assignment).
 %%
 %% assignment(Processors,Roles) ->
 %%     [{P#processor.name,
 %%       case lists:member(P,Processors#processors.up) of
-%% 	  true ->
-%% 	      ulist(elements([R#role.name || R <- Roles]));
-%% 	  false ->
-%% 	      []
+%%        true ->
+%%            ulist(elements([R#role.name || R <- Roles]));
+%%        false ->
+%%            []
 %%       end}
 %%      || P <- Processors#processors.up++Processors#processors.down].
 %%
 %% prop_valid_assigment() ->
 %%     ?FORALL({Processors,Roles},{processors(),roles()},
-%% 	    ?FORALL(Assignment,assignment(Processors,Roles),
-%% 		    valid_assignment(Processors,Roles,Assignment))).
+%%          ?FORALL(Assignment,assignment(Processors,Roles),
+%%                  valid_assignment(Processors,Roles,Assignment))).
 %% \end{verbatim}
 
 %% The job of clware is then to produce a valid assignment of roles to
@@ -389,43 +385,43 @@ prop_valid_processors() ->
 satisfies_group(Processors,Assignment,Group={_,Props}) ->
     % Which active processors belong to the group?
     Active = [P || P <- Processors#processors.up,
-		   lists:member(P#processor.node,
-				getp(members,Props))],
+                   lists:member(P#processor.node,
+                                getp(members,Props))],
     % All processors must have the correct type
     TypesOK = lists:all(fun(P) ->
-				lists:member(P#processor.type,
-					     getp(types,Props))
-				    orelse getp(types,Props) == []
-			end,
-			Active),
+                                lists:member(P#processor.type,
+                                             getp(types,Props))
+                                    orelse getp(types,Props) == []
+                        end,
+                        Active),
     % The "on_each" roles must be assigned to each processor
     Layout = getp(layout,Props),
     OnEachOK = lists:all(fun(P) ->
-				 contains(getp(P,Assignment),
-					  getp(on_each,Layout))
-			 end,
-			 Active),
+                                 contains(getp(P,Assignment),
+                                          getp(on_each,Layout))
+                         end,
+                         Active),
     % The "if_active" clauses must be satisfied
     IfActiveOK =
-	case [RoleSpec || {if_active,N,RoleSpec} <- Layout,
-			  N == length(Active)] of
-	    [] ->
-		% no role spec given for this number of active processors
-	        % is this an error or not?
-		true;
-	    [RoleSpec] ->
-		% a list of pairs of roles and lists of processors
-		% some processors may not be up
-		% I guess each processor that is up must be assigned
-		% the roles whose list it appears in
-		lists:all(
-		  fun(P) ->
-			  Roles = [R || {R,PNames} <- RoleSpec,
-					lists:member(P#processor.name,PNames)],
-			  contains(getp(P,Assignment),Roles)
-		  end,
-		  Active)
-	end,
+        case [RoleSpec || {if_active,N,RoleSpec} <- Layout,
+                          N == length(Active)] of
+            [] ->
+                % no role spec given for this number of active processors
+                % is this an error or not?
+                true;
+            [RoleSpec] ->
+                % a list of pairs of roles and lists of processors
+                % some processors may not be up
+                % I guess each processor that is up must be assigned
+                % the roles whose list it appears in
+                lists:all(
+                  fun(P) ->
+                          Roles = [R || {R,PNames} <- RoleSpec,
+                                        lists:member(P#processor.name,PNames)],
+                          contains(getp(P,Assignment),Roles)
+                  end,
+                  Active)
+        end,
     % I don't understand the significance of the packed or reserve properties.
     TypesOK andalso OnEachOK andalso IfActiveOK.
 
